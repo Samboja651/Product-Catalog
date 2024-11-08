@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-import sqlite3
+import sqlite3, os
 
 app = Flask(__name__)
 
@@ -35,12 +35,23 @@ def home():
 
 @app.get("/view_products") #view page
 def product_catalog_home():
-    name = "shoe"
-    description = "This is a nike shoe"
-    price = 300
-    return render_template(
-        'view_products.html', name = name, description = description,
-        price = price)
+    # check if product database is present
+    db_present = os.path.exists(DATABASE)
+    if db_present:
+        # connect to the database
+        conn = sqlite3.connect(DATABASE)
+        # get all products
+        get_products = '''
+                        SELECT Category, Name, Description, Price FROM PRODUCT;
+        '''
+        cursor = conn.cursor()
+        products = cursor.execute(get_products).fetchall()
+        conn.close()
+        return render_template('view_products.html', products = products)
+    else:
+        return "<h1>Come back Later. Currently there are no available products.</h1>"
+    
+
 
 @app.route("/add_product", methods=['GET', 'POST'])
 def add_new_product():
@@ -62,7 +73,7 @@ def add_new_product():
         conn = sqlite3.connect(DATABASE)
         cursor = conn.cursor()
         store_product = '''
-                        INSERT INTO PRODUCT(Category, Id, Description, Price)
+                        INSERT INTO PRODUCT(Category, Name, Description, Price)
                         VALUES(?, ?, ?, ?);
         '''
         cursor.execute(store_product, (category, name, description, price))
@@ -74,4 +85,4 @@ def add_new_product():
 
 
 if __name__ == '__main__':
-    app.run(port = 3000, debug = True)
+    app.run(port = 4000, debug = True)

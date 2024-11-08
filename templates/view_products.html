@@ -8,12 +8,14 @@
 <body>
     <h1>Product Catalog</h1>
     <section class="main_page">
+        {% for product in products %}
         <div class="container">
-            <h1 class="p_category">{{ category }}</h1>
-            <h3 class="p_name">{{ name }}</h3>
-            <p class="description">{{ description }}</p>
-            <p class="price">Kes. {{ price }}</p>
+            <h1 class="p_category">{{ product[0] }}</h1>
+            <h3 class="p_name">{{ product[1] }}</h3>
+            <p class="description">{{ product[2] }}</p>
+            <p class="price">Kes. {{ product[3] }}</p>
         </div>
+        {% endfor %}
     </section>
 </body>
 </html>
