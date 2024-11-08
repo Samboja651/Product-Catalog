@@ -1,0 +1,21 @@
+To develop a simple product catalog web app with full CRUD functionality, utilizing an SQL database for data storage.
+
+Requirements
+- user should be to Add, View, Update and delete products
+(name, description, price, category)
+- user friendly interface with form validation
+- search functionality by product name or category
+
+Tools
+- Git & Github
+- vscode
+- virtual env
+
+Technologies
+- python
+- flask
+- css
+- html
+- sqlite3
+
+Design templates
