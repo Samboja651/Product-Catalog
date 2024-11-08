@@ -10,10 +10,10 @@
     <section class="main_page">
         {% for product in products %}
         <div class="container">
-            <h1 class="p_category">{{ product[0] }}</h1>
-            <h3 class="p_name">{{ product[1] }}</h3>
-            <p class="description">{{ product[2] }}</p>
-            <p class="price">Kes. {{ product[3] }}</p>
+            <h1 class="p_category"><span class="pid">{{ product[0] }}</span>{{ product[1] }}</h1>
+            <h3 class="p_name">{{ product[2] }}</h3>
+            <p class="description">{{ product[3] }}</p>
+            <p class="price">Kes. {{ product[4] }}</p>
         </div>
         {% endfor %}
     </section>

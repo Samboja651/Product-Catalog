@@ -16,12 +16,12 @@ def get_db():
     cursor = conn.cursor()
     statement = '''
                 CREATE TABLE IF NOT EXISTS PRODUCT(
-                Id INT AUTO_INCREMENT,
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Category VARCHAR(20),
                 Name VARCHAR(25),
                 Description VARCHAR(50),
                 Price INT
-                );        
+                );      
     '''
     cursor.execute(statement)
     conn.commit()
@@ -42,12 +42,15 @@ def product_catalog_home():
         conn = sqlite3.connect(DATABASE)
         # get all products
         get_products = '''
-                        SELECT Category, Name, Description, Price FROM PRODUCT;
+                        SELECT Id, Category, Name, Description, Price FROM PRODUCT;
         '''
         cursor = conn.cursor()
         products = cursor.execute(get_products).fetchall()
         conn.close()
-        return render_template('view_products.html', products = products)
+        if len(products) != 0:
+            return render_template('view_products.html', products = products)
+        else:
+            return "<h1>Come back Later. Currently there are no available products.</h1>"
     else:
         return "<h1>Come back Later. Currently there are no available products.</h1>"
     
@@ -82,7 +85,24 @@ def add_new_product():
 
         return f"{category}, {name}, {description}, {price}"
 
-
-
+@app.route("/delete_product", methods=['GET', 'POST'])
+def delete_product():
+    if request.method == "GET":
+        return render_template("delete_product.html")
+    if request.method == "POST":
+        pid = request.form["pid"]
+        query_pid = '''SELECT Id FROM PRODUCT WHERE Id = ?;'''
+        #try block
+        conn = sqlite3.connect(DATABASE)
+        cursor = conn.cursor()
+        check_pid = cursor.execute(query_pid, pid).fetchone()
+        if check_pid != None:
+            delete_pd = '''DELETE FROM PRODUCT WHERE Id = ?;'''
+            cursor.execute(delete_pd, pid)
+            conn.commit()
+            conn.close()
+            return "<p>Product has been deleted</p>"
+        else:
+            return "<p>Product does not exist</p>"
 if __name__ == '__main__':
     app.run(port = 4000, debug = True)
